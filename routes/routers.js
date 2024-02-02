@@ -1,41 +1,29 @@
 //EXTERNAL IMPORTS
 const express = require('express');
-const Books = require("../model/Books")
 
 //INTERNAL IMPORTS
+const {addBook,
+    updateBook,
+    searchBook,
+    getBooks,
+    getBookById
+    } = require('../controllers/bookController');
 
 const router = express.Router();
 
+//GET ALL BOOKS
+router.get('/', getBooks);
+
+//GET BOOK BY ID
+router.get('/:id', getBookById);
+
 //ADD BOOK
+router.post('/', addBook);
 
-router.get("/books", async(req, res, next)=> {
-    try {
-        const allBooks = await Books.find({})
-        res.status(200).json({
-            message: "Ok",
-            books: allBooks
-        })
-    } catch(err) {
-        res.status(404).json({
-            message: "not found"
-        })
-    }
+//UPDATE BOOK
+router.put('/:id', updateBook);
 
-})
-
-router.get("/books/:id" , async(req ,res, next)=> {
-    try{
-        const {id} = req.params
-        const book = await Books.find({id}) 
-        res.status(200).json({
-            message: 'Ok',
-            book: book}) 
-        } catch(err) { 
-            res.status(404).json({
-                message: "not found"
-            })
-
-        }
-})
+//SEARCH BOOK
+router.get('/', searchBook);
 
 module.exports = router;
