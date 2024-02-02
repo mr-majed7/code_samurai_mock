@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGODB_URI)
     .catch(err => console.error('Could not connect to MongoDB...'));
 
 //ROUTES
-app.use('/', routers);
+app.use('/api/books', routers);
 
 //HANDLER ERRORS
 app.use(notFoundHandler);
