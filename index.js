@@ -12,6 +12,8 @@ dotenv.config();
 
 //JSON PARSER
 app.use(express.json());
+//URL ENCODED PARSER
+app.use(express.urlencoded({extended: true}));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)

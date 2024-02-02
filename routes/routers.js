@@ -11,6 +11,9 @@ const {addBook,
 
 const router = express.Router();
 
+//SEARCH BOOK
+router.get('/', searchBook);
+
 //GET ALL BOOKS
 router.get('/', getBooks);
 
@@ -23,7 +26,5 @@ router.post('/', addBook);
 //UPDATE BOOK
 router.put('/:id', updateBook);
 
-//SEARCH BOOK
-router.get('/', searchBook);
 
 module.exports = router;

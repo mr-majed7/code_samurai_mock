@@ -5,6 +5,7 @@ const Books = require('../model/Books');
 async function getBooks(req,res,next){
     try {
         const allBooks = await Books.find({})
+        console.log('hit')
         res.status(200).json({
             books: allBooks
         })
@@ -18,16 +19,16 @@ async function getBooks(req,res,next){
 async function getBookById(req,res,next){
     try{
         const {id} = req.params
-        const book = await Books.find({id}) 
-        if (book.length === 0){
+        const book = await Books.findOne({id}) 
+        if (!book){
             const error = new Error(`books with id: {${req.params.id}} was not found`);
             error.status = 404;
-            next(error);
+            throw error;
         }
         res.status(200).json({
             book: book}) 
     } catch(err) { 
-        next(error);
+        next(err);
 
     }
 }
@@ -51,7 +52,7 @@ async function updateBook(req, res, next) {
 
         // Book does not exist in the database
         if (!book) {
-            const error = new Error(`books with id: {${req}} was not found`);
+            const error = new Error(`books with id: {${req.params.id}} was not found`);
             error.status = 404;
             throw error;
         } else {
@@ -74,9 +75,15 @@ async function updateBook(req, res, next) {
 //SEARCH BOOK
 async function searchBook(req, res, next) {
     try {
-        const { title,author,genre,price, sorting_field, order } = req.query;
+        const { title,author,genre,price, sort, order } = req.query;
         const sortOptions = {};
-        sortOptions[sorting_field] = order === 'asc' ? 1 : -1;
+        if (sort && order) {
+            sortOptions[sort] = order === 'asc' ? 1 : -1;
+        }else if (sort && order === "DESC") {
+            sortOptions[sort] = -1;
+        }else if (sort && order === "ASC") {
+            sortOptions[sort] = 1;
+        }
         let books = []
         if (title){
             books = await Books.find({title: title}).sort(sortOptions);
