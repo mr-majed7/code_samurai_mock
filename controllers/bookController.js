@@ -4,13 +4,29 @@ const Books = require('../model/Books');
 //GET ALL BOOKS
 async function getBooks(req,res,next){
     try {
-        const allBooks = await Books.find({})
-        console.log('hit')
-        res.status(200).json({
-            books: allBooks
-        })
-    } catch(err) {
-        next(err)
+        const { title, author, genre, price, sorting_field, order } = req.query;
+
+        if (title || author || genre || price) {
+            const sortOptions = {};
+            sortOptions[sorting_field] = order === 'ASC' ? 1 : -1;
+            let books = [];
+            if (title){
+                books = await Books.find({ title: title } ).sort(sortOptions);
+            }else if (author){
+                books = await Books.find({ author: author } ).sort(sortOptions);
+            }else if (genre){
+                books = await Books.find({ genre: genre } ).sort(sortOptions);
+            }else if (price){
+                books = await Books.find({ price: Number(price) } ).sort(sortOptions);
+            }
+
+            res.status(200).json({ books });
+        } else {
+            const allBooks = await Books.find();
+            res.status(200).json({ allBooks });
+        }
+    } catch (error) {
+        next(error);
     }
 
 }
@@ -49,20 +65,15 @@ async function addBook(req, res, next) {
 async function updateBook(req, res, next) {
     try {
         const book = await Books.findOne({ id: Number(req.params.id) });
-
-        // Book does not exist in the database
         if (!book) {
             const error = new Error(`books with id: {${req.params.id}} was not found`);
             error.status = 404;
             throw error;
         } else {
-            // Update the book properties
             book.title = req.body.title;
             book.author = req.body.author;
             book.genre = req.body.genre;
             book.price = req.body.price;
-
-            // Save the updated book
             const updatedBook = await book.save();
 
             res.status(200).json(updatedBook);
@@ -72,42 +83,10 @@ async function updateBook(req, res, next) {
     }
 }
 
-//SEARCH BOOK
-async function searchBook(req, res, next) {
-    try {
-        const { title,author,genre,price, sort, order } = req.query;
-        const sortOptions = {};
-        if (sort && order) {
-            sortOptions[sort] = order === 'asc' ? 1 : -1;
-        }else if (sort && order === "DESC") {
-            sortOptions[sort] = -1;
-        }else if (sort && order === "ASC") {
-            sortOptions[sort] = 1;
-        }
-        let books = []
-        if (title){
-            books = await Books.find({title: title}).sort(sortOptions);
-        }
-        if (author){
-            books = await Books.find({author: author}).sort(sortOptions);
-        }
-        if (genre){
-            books = await Books.find({genre: genre}).sort(sortOptions);
-        }
-        if (price){
-            books = await Books.find({price: price}).sort(sortOptions);
-        }
-        res.status(200).json({ books });
-    } catch (error) {
-        next(error);
-    }
-}
-
 
 module.exports = {
     addBook,
     updateBook,
-    searchBook,
     getBooks,
     getBookById
 }

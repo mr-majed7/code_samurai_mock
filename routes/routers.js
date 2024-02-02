@@ -4,18 +4,15 @@ const express = require('express');
 //INTERNAL IMPORTS
 const {addBook,
     updateBook,
-    searchBook,
     getBooks,
     getBookById
     } = require('../controllers/bookController');
 
 const router = express.Router();
 
-//SEARCH BOOK
-router.get('/', searchBook);
-
-//GET ALL BOOKS
+//GET AND SEARCH BOOK
 router.get('/', getBooks);
+
 
 //GET BOOK BY ID
 router.get('/:id', getBookById);
