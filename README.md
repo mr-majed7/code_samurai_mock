@@ -1,7 +1,2 @@
-Team: DEBUG THUGS
-
-Majedul Islam: majedulislam7789@gmail.com
-
-Habibun Nabi Hemel: nabi3321hemel@gmail.com
-
-MD Ashraful Alam:mda7095y@gmail.com
+Code Samurai 2024 preliminary mock contest project repo.
+A simple REST api for a e-book site to add,update,search and get books.
