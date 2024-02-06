@@ -1,7 +1,7 @@
 FROM node:latest
 
 ENV PORT=5000
-ENV MONGODB_URI=mongodb+srv://code_samurai:ZIfybXRnz64yiQPF@cluster0.ffsxpkt.mongodb.net/?retryWrites=true&w=majority
+ENV MONGODB_URI=
 
 WORKDIR /app
 
